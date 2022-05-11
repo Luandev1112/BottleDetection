@@ -1,0 +1,201 @@
+{% load static %}
+{% block sidebar %}
+		<div class="topnav">
+			<div class="container-fluid">
+				<nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+					<div class="collapse navbar-collapse" id="topnav-menu-content">
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								<a class="nav-link" href="{% url 'dashboard' %}" key="t-dashboard"> <i class="ri-dashboard-line me-2"></i> Dashboard</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button" > <i class="ri-pencil-ruler-2-line me-2"></i> <span  key="t-ui-elements"> UI Elements</span> 
+									<div class="arrow-down"></div>
+								</a>
+								<div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-xl" aria-labelledby="topnav-uielement">
+									<div class="row">
+										<div class="col-lg-4">
+											<div> <a href="{% url 'ui-alerts' %}" class="dropdown-item" key="t-alerts" >Alerts</a>
+												<a href="{% url 'ui-buttons' %}" class="dropdown-item" key="t-buttons"  >Buttons</a>
+												<a href="{% url 'ui-cards' %}" class="dropdown-item" key="t-cards"  >Cards</a>
+												<a href="{% url 'ui-carousel' %}" class="dropdown-item" key="t-carousel" >Carousel</a>
+												<a href="{% url 'ui-dropdowns' %}" class="dropdown-item" key="t-dropdowns" >Dropdowns</a>
+												<a href="{% url 'ui-grid' %}" class="dropdown-item" key="t-grid" >Grid</a>
+												<a href="{% url 'ui-images' %}" class="dropdown-item" key="t-images" >Images</a>
+											</div>
+										</div>
+										<div class="col-lg-4">
+											<div> <a href="{% url 'ui-lightbox' %}" class="dropdown-item" key="t-lightbox" >Lightbox</a>
+												<a href="{% url 'ui-modals' %}"" class="dropdown-item" key="t-modals" >Modals</a>
+												<a href="{% url 'ui-rangeslider' %}" class="dropdown-item" key="t-range-slider"  >Range Slider</a>
+												<a href="{% url 'ui-roundslider' %}" class="dropdown-item" key="t-round-slider" >Round slider</a>
+												<a href="{% url 'ui-session-timeout' %}" class="dropdown-item" key="t-session-timeout" >Session Timeout</a>
+												<a href="{% url 'ui-progressbars' %}" class="dropdown-item" key="t-progress-bars" >Progress Bars</a>
+												<a href="{% url 'ui-sweet-alert' %}" class="dropdown-item" key="t-sweet-alert" >Sweetalert 2</a>
+											</div>
+										</div>
+										<div class="col-lg-4">
+											<div> <a href="{% url 'ui-tabs-accordions' %}" class="dropdown-item" key="t-tabs-accordions" >Tabs & Accordions</a>
+												<a href="{% url 'ui-typography' %}" class="dropdown-item" key="t-typography" >Typography</a>
+												<a href="{% url 'ui-video' %}" class="dropdown-item" key="t-video" >Video</a>
+												<a href="{% url 'ui-general' %}" class="dropdown-item" key="t-general"  >General</a>
+												<a href="{% url 'ui-rating' %}" class="dropdown-item" key="t-rating" >Rating</a>
+												<a href="{% url 'ui-notifications' %}" class="dropdown-item" key="t-notifications" >Notifications</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-apps" role="button" > <i class="ri-apps-2-line me-2"></i> <span key="t-apps">Apps</span> 
+									<div class="arrow-down"></div>
+								</a>
+								<div class="dropdown-menu" aria-labelledby="topnav-apps"> <a href="{% url 'calendar' %}" class="dropdown-item" key="t-calendar" >Calendar</a>
+									<a href="{% url 'chat' %}" class="dropdown-item" key="t-chat" >Chat</a>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-email" role="button" key="t-email">
+                                                    Email <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-email"> <a href="{% url 'email-inbox' %}" class="dropdown-item" key="t-inbox" >Inbox</a>
+											<a href="{% url 'email-read' %}" class="dropdown-item" key="t-read-email" >Read Email</a>
+										</div>
+									</div>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-ecommerce" role="button" key="t-ecommerce" >
+                                                    Ecommerce <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-ecommerce"> <a href="{% url 'ecommerce-products' %}" class="dropdown-item" key="t-products" >Products</a>
+											<a href="{% url 'ecommerce-product-detail' %}" class="dropdown-item" key="t-product-detail" >Product Detail</a>
+											<a href="{% url 'ecommerce-orders' %}" class="dropdown-item" key="t-orders" >Orders</a>
+											<a href="{% url 'ecommerce-customers' %}" class="dropdown-item" key="t-customers" >Customers</a>
+											<a href="{% url 'ecommerce-cart' %}" class="dropdown-item" key="t-cart" >Cart</a>
+											<a href="{% url 'ecommerce-checkout' %}" class="dropdown-item" key="t-checkout" >Checkout</a>
+											<a href="{% url 'ecommerce-shops' %}" class="dropdown-item" key="t-shops" >Shops</a>
+											<a href="{% url 'ecommerce-add-product' %}" class="dropdown-item" key="t-add-product" >Add Product</a>
+										</div>
+									</div> <a href="{% url 'app-kanban-board' %}" class="dropdown-item" key= >Kanban Board</a>
+								</div>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-components" role="button" > <i class="ri-stack-line me-2"></i> <span key="t-components">Components</span> 
+									<div class="arrow-down"></div>
+								</a>
+								<div class="dropdown-menu" aria-labelledby="topnav-components">
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-form" role="button" key="t-forms">
+                                                    Forms <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-form"> <a href="{% url 'form-elements' %}" class="dropdown-item" key="t-form-elements" >Form Elements</a>
+											<a href="{% url 'form-validation' %}" class="dropdown-item" key="t-form-validation" >Form Validation</a>
+											<a href="{% url 'form-advanced' %}" class="dropdown-item" key="t-form-advanced" >Form Advanced</a>
+											<a href="{% url 'form-editors' %}" class="dropdown-item" key="t-form-editors"  >Form Editors</a>
+											<a href="{% url 'form-uploads' %}" class="dropdown-item" key="t-form-upload" >Form File Upload</a>
+											<a href="{% url 'form-xeditable' %}" class="dropdown-item" key="t-form-xeditable" >Form Xeditable</a>
+											<a href="{% url 'form-wizard' %}" class="dropdown-item" key="t-form-wizard" >Form Wizard</a>
+											<a href="{% url 'form-mask' %}" class="dropdown-item" key="t-form-mask" >Form Mask</a>
+										</div>
+									</div>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-table" role="button" key="t-tables">
+                                                    Tables <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-table"> <a href="{% url 'tables-basic' %}" class="dropdown-item" key="t-basic-tables"  >Basic Tables</a>
+											<a href="{% url 'tables-datatable' %}" class="dropdown-item" key="t-data-tables" >Data Tables</a>
+											<a href="{% url 'tables-responsive' %}" class="dropdown-item" key="t-responsive-table" >Responsive Table</a>
+											<a href="{% url 'tables-editable' %}" class="dropdown-item" key="t-editable-table" >Editable Table</a>
+										</div>
+									</div>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-charts" role="button" key="t-charts">
+                                                    Charts <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-charts"> <a href="{% url 'charts-apex' %}" class="dropdown-item" key="t-apex-charts"  >Apex charts</a>
+											<a href="{% url 'charts-chartjs' %}" class="dropdown-item" key="t-chartjs-charts" >Chartjs</a>
+											<a href="{% url 'charts-flot' %}" class="dropdown-item" key="t-flot-charts" >Flot Chart</a>
+											<a href="{% url 'charts-knob' %}" class="dropdown-item" key="t-knob-charts"  >Jquery Knob Chart</a>
+											<a href="{% url 'charts-sparkline' %}" class="dropdown-item" key="t-sparkline-charts" >Sparkline Chart</a>
+										</div>
+									</div>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-icons" role="button" key="t-icons">
+                                                    Icons <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-icons"> <a href="{% url 'icons-remix' %}" class="dropdown-item" key="t-remix-icon" >Remix Icons</a>
+											<a href="{% url 'icons-materialdesign' %}" class="dropdown-item" key="t-material-design" >Material Design</a>
+											<a href="{% url 'icons-dripicons' %}" class="dropdown-item" key="t-dripicons"  >Dripicons</a>
+											<a href="{% url 'icons-fontawesome' %}" class="dropdown-item" key="t-font-awesome" >Font awesome 5</a>
+										</div>
+									</div>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-map" role="button" key="t-maps">
+                                                    Maps <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-map"> <a href="{% url 'maps-google' %}" class="dropdown-item" key="t-g-maps" >Google Maps</a>
+											<a href="{% url 'maps-vector' %}" class="dropdown-item" key="t-v-maps" >Vector Maps</a>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-more" role="button"> <i class="ri-file-copy-2-line me-2"></i>Pages
+									<div class="arrow-down"></div>
+								</a>
+								<div class="dropdown-menu" aria-labelledby="topnav-more">
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-auth" role="button">
+                                                    Authentication <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-auth"> <a href="{% url 'auth-login'%}" class="dropdown-item" key="t-login" >Login</a>
+											<a href="{% url 'auth-register'%}" class="dropdown-item" key="t-register"  >Register</a>
+											<a href="{% url 'auth-recoverpw' %}" class="dropdown-item" key="t-recover-password" >Recover Password</a>
+											<a href="{% url 'auth-lock-screen' %}" class="dropdown-item" key="t-lock-screen" >Lock Screen</a>
+											<a href="{% url 'auth-confirm-mail'%}" class="dropdown-item" key="t-confirm-mail"  >Confirm Mail</a>
+											<a href="{% url 'auth-email-verification'%}" class="dropdown-item" key="t-email-verification" >Email Verification</a>
+											<a href="{% url 'auth-two-step-verification' %}" class="dropdown-item" key="t-two-step-verification" >Two Step Verification</a>
+										</div>
+									</div>
+									<div class="dropdown"> <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-utility" role="button" key="t-utility">
+                                                    Utility <div class="arrow-down"></div>
+                                                </a>
+										<div class="dropdown-menu" aria-labelledby="topnav-utility"> <a href="{% url 'pages-starter' %}" class="dropdown-item" key="t-starter-page" >Starter Page</a>
+											<a href="{% url 'pages-maintenance' %}" class="dropdown-item" key="t-starter-page" >Maintenance</a>
+											<a href="{% url 'pages-comingsoon' %}" class="dropdown-item" key="t-maintenance" >Coming Soon</a>
+											<a href="{% url 'pages-timeline' %}" class="dropdown-item" key="t-timeline"  >Timeline</a>
+											<a href="{% url 'pages-faqs' %}" class="dropdown-item" key="t-faqs"  >FAQs</a>
+											<a href="{% url 'pages-pricing' %}" class="dropdown-item" key="t-pricing" >Pricing</a>
+											<a href="{% url 'pages-404' %}" class="dropdown-item" key="t-error-404"  >Error 404</a>
+											<a href="{% url 'pages-500' %}" class="dropdown-item" key="t-error-500" >Error 500</a>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-layout" role="button"> <i class="ri-layout-3-line me-2"></i><span key="t-layouts">Layouts</span> 
+									<div class="arrow-down"></div>
+								</a>
+								<div class="dropdown-menu" aria-labelledby="topnav-layout">
+									<div class="dropdown">
+										<a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-layout-verti" role="button"> <span key="t-vertical">Vertical</span> 
+											<div class="arrow-down"></div>
+										</a>
+										<div class="dropdown-menu" aria-labelledby="topnav-layout-verti"> <a href="{% url 'layouts-light-sidebar' %}" class="dropdown-item" key="t-light-sidebar">Light Sidebar</a>
+											<a href="{% url 'layouts-compact-sidebar' %}" class="dropdown-item" key="t-compact-sidebar">Compact Sidebar</a>
+											<a href="{% url 'layouts-icon-sidebar' %}" class="dropdown-item" key="t-icon-sidebar">Icon Sidebar</a>
+											<a href="{% url 'layouts-boxed' %}" class="dropdown-item" key="t-boxed-width">Boxed Width</a>
+											<a href="{% url 'layouts-preloader' %}" class="dropdown-item" key="t-preloader">Preloader</a>
+											<a href="{% url 'layouts-colored-sidebar' %}" class="dropdown-item" key="t-colored-sidebar">Colored Sidebar</a>
+											{% comment %} <a href="{% url 'layouts-scrollable' %}" class="dropdown-item" key="t-colored-sidebar">Scrollable</a> {% endcomment %}
+										</div>
+									</div>
+									<div class="dropdown">
+										<a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-layout-hori" role="button"> <span key="t-horizontal">Horizontal</span> 
+											<div class="arrow-down"></div>
+										</a>
+										<div class="dropdown-menu" aria-labelledby="topnav-layout-hori"> <a href="{% url 'layouts-horizontal' %}" class="dropdown-item" key="t-horizontal">Horizontal</a>
+											<a href="{% url 'layouts-hori-topbar-light' %}" class="dropdown-item" key="t-topbar-light">Topbar light</a>
+											<a href="{% url 'layouts-hori-boxed-width' %}" class="dropdown-item" key="t-boxed-width">Boxed width</a>
+											<a href="{% url 'layouts-hori-preloader' %}" class="dropdown-item" key="t-preloader">Preloader</a>
+											<a href="{% url 'layouts-colored-header' %}" class="dropdown-item" key="t-colored-topbar">Colored Header</a>
+											{% comment %} <a href="{% url 'layouts-hori-scrollable' %}" class="dropdown-item" key="t-colored-topbar">Scrollable</a> {% endcomment %}
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+{% endblock sidebar %}

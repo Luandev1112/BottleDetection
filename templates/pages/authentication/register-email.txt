@@ -1,0 +1,21 @@
+{% autoescape off %}
+
+Dear {{username}},
+
+I want to thank you for being a loyal Nazox customer. As one of our first clients, you helped our company get off the ground. It was a real pleasure helping you bring your vision to life in what was then your new home.
+
+Since then, we’ve worked together on numerous home renovation and design projects, and I’m always excited when I see that you’ve emailed with ideas.
+
+In addition, I’m grateful to you for recommending other customers. You’ve helped make my part-time hobby into a full-time job, and I can’t thank you enough.
+
+Your Username is : {{username}}
+Your Password is : {{password}}
+
+
+
+Sincerely yours,
+
+Nazox Team.
+
+
+{% endautoescape %}

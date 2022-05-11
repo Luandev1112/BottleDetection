@@ -1,0 +1,92 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block extra_css %}
+
+        <!-- DataTables -->
+        <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'libs/datatables.net-select-bs4/css//select.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
+
+        <!-- Responsive datatable examples -->
+        <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />     
+
+{% endblock extra_css %}
+
+{% block content %}                        
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="alternative-page-datatable" class="table w-100" style="table-layout:fixed">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px">No</th>
+                                <th>Photo</th>
+                                <th>Product ID</th>
+                                <th>Product Name</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr> 
+                                <td>{{ product.id }}</td>
+                                <td>
+                                    <img src="/media/{{ product.product_photo }}" height="50px" />
+                                </td>
+                                <td>{{ product.product_id }}</td>
+                                <td>{{ product.product_name }}</td>
+                                <td>{{ product.description }}</td>
+                                <td>
+                                    {% if product.status == 0 %}
+                                        Not Verified
+                                    {% elif product.status == 1 %}
+                                        Verified
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    Edit
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div> <!-- end card body-->
+            </div> <!-- end card -->
+        </div><!-- end col-->
+    </div>
+    <!-- end row-->
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="dataTables_info" id="key-datatable_info" role="status" aria-live="polite">Showing {{ rows_from }} to {{ rows_to }} of {{ rows_total }} entries</div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="key-datatable_paginate">
+                <ul class="pagination pagination-rounded" style="float:right">
+                    <li class="paginate_button page-item previous disabled" id="key-datatable_previous">
+                        <a href="#" aria-controls="key-datatable" data-dt-idx="0" tabindex="0" class="page-link">
+                            <i class="mdi mdi-chevron-left"></i></a>
+                    </li>
+                    {% for page in pages %}
+                        <li class="paginate_button page-item {{ page.active }}">
+                            <a href="{% url 'products' %}?page={{page.value}}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
+                        </li>
+                    {% endfor %}
+                    <li class="paginate_button page-item previous disabled" id="key-datatable_previous">
+                        <a href="#" aria-controls="key-datatable" data-dt-idx="0" tabindex="0" class="page-link">
+                            <i class="mdi mdi-chevron-right"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}	
+
+{% block extra_javascript %}
+    <!-- Required datatable js -->
+    <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock extra_javascript %}

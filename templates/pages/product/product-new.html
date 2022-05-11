@@ -1,0 +1,58 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+        <!-- twitter-bootstrap-wizard css -->
+        <link rel="stylesheet" href="{% static 'libs/twitter-bootstrap-wizard/prettify.css' %}">
+
+        <!-- select2 css -->
+        <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+
+        <!-- dropzone css -->
+        <link href="{% static 'libs/dropzone/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/product/new"  method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label" for="product_name">Product Name</label>
+                            <input id="productname" name="product_name" type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="file">Product Photo</label>
+                            <input id="product_file" name="file" type="file" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="productdesc">Product Description</label>
+                            <textarea class="form-control" id="productdesc" name="product_description" rows="5"></textarea>
+                        </div>
+                        <div class="mb-3 text-end">
+                            <button class="btn btn-primary" type="submit">Submit form</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+{% endblock content %}
+{% block extra_javascript %}
+        <!-- twitter-bootstrap-wizard js -->
+        <script src="{% static 'libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+
+        <script src="{% static 'libs/twitter-bootstrap-wizard/prettify.js' %}"></script>
+
+        <!-- select 2 plugin -->
+        <script src="{% static 'libs/select2/js/select2.min.js' %}"></script>
+
+        <!-- dropzone plugin -->
+        <script src="{% static 'libs/dropzone/min/dropzone.min.js' %}"></script>
+
+        <!-- init js -->
+        <script src="{% static 'js/pages/product-add.init.js' %}"></script>
+
+{% endblock extra_javascript %}

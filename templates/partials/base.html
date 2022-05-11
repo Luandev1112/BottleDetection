@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{title}} | Nazox - Admin & Dashboard Template</title>
+	<meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+	<meta content="Themesdesign" name="author" />
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    <!--Extra Css-->
+    {% block extra_css %}{% endblock extra_css %}
+	<!-- Bootstrap Css -->
+	<link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+	<!-- Icons Css -->
+	<link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+	<!-- App Css-->
+	<link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+</head>
+
+<body  data-sidebar="dark">
+
+    {% block preloader %}
+    {% comment %} {% include 'partials/preloader.html' %} {% endcomment %}
+    {% endblock preloader %}
+	<!-- Begin page -->
+	<div id="layout-wrapper">
+
+        {% block header %}
+		{% include 'partials/header.html' %}
+        {% comment %} {% include 'partials/hori-header.html' %} {% endcomment %}
+        {% endblock header %}
+    
+	    {% block sidebar %}
+        {% include 'partials/dev_sidebar.html' %}
+		{% comment %} {% include 'partials/hori-sidebar.html' %} {% endcomment %}
+        {% endblock sidebar %}
+	
+		<!-- ============================================================== -->
+		<!-- Start right Content here -->
+		<!-- ============================================================== -->
+		<div class="main-content">
+			<div class="page-content">
+				<div class="container-fluid">
+					<!-- start page title -->
+					<div class="row">
+						<div class="col-12">
+							<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+								<h4 class="mb-sm-0">{{title}}</h4>
+								<div class="page-title-right">
+									<ol class="breadcrumb m-0">
+										<li class="breadcrumb-item"><a href="javascript: void(0);">{{pageview}}</a>
+										</li>
+										<li class="breadcrumb-item active">{{title}}</li>
+									</ol>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end page title -->{% block content %}{% endblock content %}</div>
+			</div>
+			<!-- End Page-content -->
+            {% block footer %}
+            {% include 'partials/footer.html' %}
+            {% endblock footer %}
+            </div>
+		<!-- end main content-->
+	</div>
+	<!-- END layout-wrapper -->
+	<!-- JAVASCRIPT -->
+	<script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+	<script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
+	<script src="{% static 'libs/simplebar/simplebar.min.js' %}"></script>
+	<script src="{% static 'libs/node-waves/waves.min.js' %}"></script>
+    <!--Extra Javascript-->
+    {% block extra_javascript %} {% endblock extra_javascript %}
+	<!-- App js -->
+	<script src="{% static 'js/app.js' %}"></script>
+</body>
+
+</html>

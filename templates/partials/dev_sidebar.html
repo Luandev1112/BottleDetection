@@ -1,0 +1,66 @@
+{% load static %}
+{% block sidebar %}
+		<!-- ========== Left Sidebar Start ========== -->
+		<div class="vertical-menu">
+			<div data-simplebar class="h-100">
+				<!--- Sidemenu -->
+				<div id="sidebar-menu">
+					<!-- Left Menu Start -->
+					<ul class="metismenu list-unstyled" id="side-menu">
+						<li class="menu-title" key="t-menu">Menu</li>
+						<li>
+							<a href="{% url 'dashboard' %}" class="waves-effect"> <i class="ri-dashboard-line"></i>
+								<!-- <span class="badge rounded-pill bg-success float-end">3</span> -->
+								<span key="t-dashboards">Dashboard</span>
+							</a>
+						</li>
+						<li>
+							<a href="{% url 'brands' %}" class=" waves-effect"> <i class="ri-file-2-line"></i>
+								<span key="t-calendar" >Edit Vodka Labels</span>
+							</a>
+						</li>
+						<li>
+							<a href="{% url 'companies' %}" class=" waves-effect"> <i class=" ri-hotel-fill"></i>
+								<span key="t-chat">Companies</span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-store-2-line"></i>
+								<span key="t-ecommerce">Planograms</span>
+							</a>
+							<ul class="sub-menu" aria-expanded="false">
+								<li><a href="{% url 'planograms' %}"key="t-products">Planogram List</a>
+								</li>
+								<li><a href="{% url 'planogram-new' %}"key="t-add-product">Add New Planogram</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-gift-fill"></i>
+								<span key="t-ecommerce">Products</span>
+							</a>
+							<ul class="sub-menu" aria-expanded="false">
+								<li><a href="{% url 'products' %}"key="t-products">Product List</a>
+								</li>
+								<li><a href="{% url 'product-new' %}"key="t-add-product">Add New Product</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript: void(0);" class="has-arrow waves-effect"> <i class="ri-image-fill"></i>
+								<span key="t-ecommerce">Images</span>
+							</a>
+							<ul class="sub-menu" aria-expanded="false">
+								<li><a href="{% url 'imagelist' %}"key="t-products">Image List</a>
+								</li>
+								<li><a href="{% url 'processlist' %}"key="t-add-product">Process List</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- Sidebar -->
+			</div>
+		</div>
+		<!-- Left Sidebar End -->
+{% endblock sidebar %}
