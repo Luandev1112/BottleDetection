@@ -1,12 +1,16 @@
 from traceback import print_list
 from django.http import request
+from django.http import HttpResponse
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views import View   
 from django.contrib.auth.mixins import LoginRequiredMixin
-from numpy import product
+# from numpy import product
 from layouts.models import Product
 import uuid
 import math
+from datetime import datetime
 
 # Dashboard
 class DashboardView(LoginRequiredMixin,View):
@@ -50,7 +54,7 @@ class ProductsView(LoginRequiredMixin,View):
         page_list = []
         page_no = int(request.GET.get('page', '1'))
         total_rows = Product.objects.count()
-        numbers_per_page = 2
+        numbers_per_page = 20
         total_no_of_pages = math.ceil(total_rows / numbers_per_page)
         rows_from = 0
         rows_to = 0
@@ -206,7 +210,6 @@ class ProductsView(LoginRequiredMixin,View):
                             'active' : pg_active
                         }
                         page_list.append(pg)
-        print(products[0]['product_photo'])
         datas = {
             'products' : products,
             'pages' : page_list,
@@ -217,6 +220,19 @@ class ProductsView(LoginRequiredMixin,View):
             'pageview' : 'Nazox',
         }      
         return render(request, 'pages/product/product-list.html',datas)
+    def post(self,request):
+        if request.method == "POST":
+            id = request.POST.get('id')
+            pro = Product.objects.get(id=id)
+            pro.product_name = request.POST.get('product_name')
+            pro.description = request.POST.get('description')
+            pro.order = request.POST.get('product_order')
+            pro.status = request.POST.get('status')
+            if request.FILES.get('file'):
+                pro.product_photo = request.FILES.get('file')
+            pro.updated_at = datetime.now()
+            pro.save()
+            return HttpResponseRedirect("/products")
 
 class ProductAddView(LoginRequiredMixin,View):
     def get(self, request):
@@ -233,8 +249,33 @@ class ProductAddView(LoginRequiredMixin,View):
             row = Product(product_id = product_id, product_name = product_name, product_photo = product_image, description = product_description)
             row.save()
             return render(request, 'pages/product/product-list.html')
-            
-            
+
+class ProductGetView(LoginRequiredMixin,View):
+    def get(self, request, id):
+        pro = Product.objects.get(id=id)
+        datas = {}
+        datas['id'] = pro.id 
+        datas['product_name'] = pro.product_name
+        datas['status'] = pro.status
+        datas['description'] = pro.description
+        datas['order'] = pro.order
+        return JsonResponse(datas)
+
+class ProductEditView(LoginRequiredMixin,View):
+    def get(self,request):
+        if request.method == "POST":
+            id = request.POST.get('id')
+            pro = Product.objects.get(id=id)
+            pro.product_name = request.POST.get('product_name')
+            pro.description = request.POST.get('product_description')
+            pro.order = request.POST.get('product_order')
+            pro.status = request.POST.get('product_status')
+            if request.FILES.get('file'):
+                pro.product_photo = request.FILES.get('file')
+            pro.updated_at = datetime.now()
+            pro.save()
+            return HttpResponseRedirect("/products")
+
 class PlanogramsView(LoginRequiredMixin,View):
     def get(self, request):
         greeting = {}

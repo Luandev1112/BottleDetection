@@ -6,7 +6,7 @@
         <link href="{% static 'libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
         <link href="{% static 'libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
         <link href="{% static 'libs/datatables.net-select-bs4/css//select.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />
-
+        <link href="{% static 'libs/magnific-popup/magnific-popup.css' %}" rel="stylesheet" type="text/css" />
         <!-- Responsive datatable examples -->
         <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />     
 
@@ -32,27 +32,94 @@
                         <tbody>
                             {% for product in products %}
                             <tr> 
-                                <td>{{ product.id }}</td>
+                                <td>{{ forloop.counter }} </td>
                                 <td>
+                                    <a class="image-popup-vertical-fit" href="/media/{{ product.product_photo }}" title="{{ product.product_name }}">
                                     <img src="/media/{{ product.product_photo }}" height="50px" />
+                                    </a>
                                 </td>
                                 <td>{{ product.product_id }}</td>
                                 <td>{{ product.product_name }}</td>
                                 <td>{{ product.description }}</td>
                                 <td>
                                     {% if product.status == 0 %}
-                                        Not Verified
+                                        <div class="btn btn-danger">
+                                            Not Verified
+                                        </div>
                                     {% elif product.status == 1 %}
-                                        Verified
+                                        <div class="btn btn-primary">
+                                            Verified
+                                        </div>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    Edit
+                                    <a type="button" class="popup-form btn btn-info" href="#edit-form" product_id="{{ product.id }}">
+                                        <i class="ri-edit-box-line"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger">
+                                        <i class="ri-delete-bin-fill"></i>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+
+                    <div class="card mfp-hide mfp-popup-form mx-auto" id="edit-form">
+                        <div class="card-body">
+                            <h4 class="mb-4">Edit Product</h4>   
+                            <form id="product_edit_form" action="{% url 'products' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" id="id" >
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="name">Change Photo</label>
+                                            <input type="file" class="form-control" id="file" name="file">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="name">Product Name</label>
+                                            <input type="text" class="form-control" id="name" name="product_name" placeholder="Enter Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="status">Status</label>
+                                            <select class="form-control" name="status" id="product_status">
+                                                <option value="0"> Not Verified </option>
+                                                <option value="1"> Verified </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="order">Order</label>
+                                            <input type="number" class="form-control" id="product_order" name="product_order" placeholder="Enter Order Number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="description">Description</label>
+                                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                        </div>  
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="text-end mt-3">
+                                            <button type="submit" class="btn btn-primary">Edit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                 </div> <!-- end card body-->
             </div> <!-- end card -->
@@ -87,6 +154,8 @@
 
 {% block extra_javascript %}
     <!-- Required datatable js -->
-    <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'libs/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/pages/product-list.js' %}"></script>
 {% endblock extra_javascript %}

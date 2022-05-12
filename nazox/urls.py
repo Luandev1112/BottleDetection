@@ -25,12 +25,17 @@ urlpatterns = [
     # Menu    
     path('',views.DashboardView.as_view(),name='dashboard'),# Dashboard
     path('campanies',views.ComapniesView.as_view(),name='companies'),# Companies
+
     path('products',views.ProductsView.as_view(),name='products'),# Products
     path('product/new',views.ProductAddView.as_view(),name='product-new'),# New Product
+    path('product/<id>',views.ProductGetView.as_view(),name='product'),# New Product
+
     path('planograms',views.PlanogramsView.as_view(),name='planograms'),# Planograms
     path('planogram/new',views.PlanogramAddView.as_view(),name='planogram-new'),# New Planogram
+
     path('imagelist',views.ImageListView.as_view(),name='imagelist'),# New Planogram
     path('processlist',views.ProcessListView.as_view(),name='processlist'),# New Planogram
+
     path('brands',views.BrandsView.as_view(),name='brands'),# New Planogram
 
     # Apps 
