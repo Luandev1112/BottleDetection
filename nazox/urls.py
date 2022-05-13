@@ -39,6 +39,8 @@ urlpatterns = [
     path('imagelist',views.ImageListView.as_view(),name='imagelist'),# New Planogram
     path('processlist',views.ProcessListView.as_view(),name='processlist'),# New Planogram
 
+    path('addimage',views.AddImageView.as_view(),name='addimage'),# New Planogram
+
     # Apps 
     path('ecommerce/',include('ecommerce.urls')),# Ecommerce
     path('email/',include('mail.urls')),# Email

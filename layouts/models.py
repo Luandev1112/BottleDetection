@@ -13,6 +13,16 @@ def get_products_path(directory_str, filename):
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join('products/', filename)
 
+def get_store_path(directory_str, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('store/', filename)
+
+def get_result_path(directory_str, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('result/', filename)
+
 # Create your models here.
 class Company(models.Model):
     id=models.AutoField(primary_key=True)
@@ -70,7 +80,7 @@ class StoreImage(models.Model):
     id=models.AutoField(primary_key=True)
     company_id=models.IntegerField(default=0)
     user_id=models.IntegerField(default=0)
-    photo_name=models.ImageField(upload_to='images')
+    photo_name=models.ImageField(upload_to=get_store_path)
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)
 
@@ -84,6 +94,6 @@ class ProcessResult(models.Model):
 class ResultImage(models.Model):
     id=models.AutoField(primary_key=True)
     result_id=models.IntegerField(default=0)
-    result_image_name=models.ImageField(upload_to='resultimages')
+    result_image_name=models.ImageField(upload_to=get_result_path)
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)

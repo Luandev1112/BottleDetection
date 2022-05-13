@@ -8,6 +8,9 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from numpy import product
 from layouts.models import Product
+from layouts.models import Company
+from layouts.models import StoreImage
+from layouts.models import ResultImage
 import uuid
 import math
 from datetime import datetime
@@ -353,3 +356,26 @@ class ProcessListView(LoginRequiredMixin,View):
         greeting['title'] = "Chat"
         greeting['pageview'] = "Nazox"        
         return render(request, 'menu/apps-chat.html',greeting)
+
+class AddImageView(LoginRequiredMixin,View):
+    def get(self, request):
+        greeting = {}
+        greeting['title'] = "Add Image"
+        greeting['pageview'] = "Nazox"        
+        return render(request, 'pages/image/add-image.html',greeting)
+    def post(self,request):
+        if request.method == "POST":
+            user_id = request.POST.get('user_id')
+            company_id = request.POST.get('company_id')
+            company_name = request.POST.get('company_name')
+            store_image = request.FILES.get('file')
+            program_id = request.POST.get('program_id')
+            program_name = request.POST.get('program_name')
+            # add to company table
+            company_row = Company(company_id=company_id, company_name=company_name);
+            company_row.save()
+            # add to store_image table
+            store_row = StoreImage(user_id=user_id, company_id=company_id, photo_name = store_image)
+            store_row.save()
+
+            return HttpResponseRedirect("/products")
