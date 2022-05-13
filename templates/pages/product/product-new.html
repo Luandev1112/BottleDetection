@@ -13,7 +13,7 @@
 {% endblock extra_css %}
 {% block content %}
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <div class="card">
                 <div class="card-body">
                     <form action="/product/new"  method="POST" enctype="multipart/form-data">
@@ -31,7 +31,27 @@
                             <textarea class="form-control" id="productdesc" name="product_description" rows="5"></textarea>
                         </div>
                         <div class="mb-3 text-end">
-                            <button class="btn btn-primary" type="submit">Submit form</button>
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/product-import"  method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label" for="product_name">Import Product Name List File</label><br>
+                            <label class="form-label text-danger" for="product_name">*All verified products will be removed</label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="file">Product Name List File</label>
+                            <input id="product_file" name="file" type="file" class="form-control">
+                        </div>
+                        <div class="mb-3 text-end">
+                            <button class="btn btn-primary" type="submit">Import</button>
                         </div>
                     </form>
                 </div>

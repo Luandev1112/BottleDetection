@@ -12,8 +12,14 @@
 
 {% endblock extra_css %}
 
-{% block content %}                        
+{% block content %}
+
     <div class="row">
+        <div class="col-12">
+            <a class="btn btn-primary btn_export">Export to dataset name file</a>
+        </div>
+    </div> 
+    <div class="row mt-3">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -32,7 +38,7 @@
                         <tbody>
                             {% for product in products %}
                             <tr> 
-                                <td>{{ forloop.counter }} </td>
+                                <td>{{ product.order }} </td>
                                 <td>
                                     <a class="image-popup-vertical-fit" href="/media/{{ product.product_photo }}" title="{{ product.product_name }}">
                                     <img src="/media/{{ product.product_photo }}" height="50px" />
@@ -56,9 +62,9 @@
                                     <a type="button" class="popup-form btn btn-info" href="#edit-form" product_id="{{ product.id }}">
                                         <i class="ri-edit-box-line"></i>
                                     </a>
-                                    <button type="button" class="btn btn-danger">
+                                    <a type="button" class="btn btn-danger btn-delete-product"  product_id="{{ product.id }}">
                                         <i class="ri-delete-bin-fill"></i>
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}

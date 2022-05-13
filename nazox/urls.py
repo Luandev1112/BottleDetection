@@ -28,15 +28,16 @@ urlpatterns = [
 
     path('products',views.ProductsView.as_view(),name='products'),# Products
     path('product/new',views.ProductAddView.as_view(),name='product-new'),# New Product
-    path('product/<id>',views.ProductGetView.as_view(),name='product'),# New Product
+    path('product/<id>',views.ProductGetView.as_view(),name='product'),# GET Product
+    path('product-delete/<id>',views.ProductDeleteView.as_view(),name='product-delete'),# DELETE Product
+    path('product-import',views.ProductImportView.as_view(),name='product-import'),# Import Product
+    path('product-export',views.ProductExportView.as_view(),name='product-export'),# Import Product
 
     path('planograms',views.PlanogramsView.as_view(),name='planograms'),# Planograms
     path('planogram/new',views.PlanogramAddView.as_view(),name='planogram-new'),# New Planogram
 
     path('imagelist',views.ImageListView.as_view(),name='imagelist'),# New Planogram
     path('processlist',views.ProcessListView.as_view(),name='processlist'),# New Planogram
-
-    path('brands',views.BrandsView.as_view(),name='brands'),# New Planogram
 
     # Apps 
     path('ecommerce/',include('ecommerce.urls')),# Ecommerce

@@ -35,5 +35,40 @@
                 console.log(err)
             }
         })
+    }),
+    e(".btn-delete-product").click(function(){
+        var pro_id = $(this).attr('product_id');
+        var conf = confirm("Are you sure to delete this product?");
+        if(conf){
+            $.ajax({
+                url: '/product-delete/' + pro_id,
+                type: 'get',
+                dataType: 'json',
+                success: function(result){
+                    window.location.href = "/products";
+                },
+                error: function(err){
+                    console.log(err)
+                }
+            })
+        }
+    }),
+    e(".btn_export").click(function(){
+        var pro_id = $(this).attr('product_id');
+        var conf = confirm("Are you sure to export current verified product names to dataset file?");
+        if(conf){
+            $.ajax({
+                url: '/product-export',
+                type: 'get',
+                dataType: 'json',
+                success: function(result){
+                    console.log(result);
+                    alert("Successfully exported");
+                },
+                error: function(err){
+                    console.log(err)
+                }
+            })
+        }
     })
 }).apply(this,[jQuery]);

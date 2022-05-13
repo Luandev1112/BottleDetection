@@ -11,6 +11,10 @@ from layouts.models import Product
 import uuid
 import math
 from datetime import datetime
+from django.core.files.storage import FileSystemStorage
+import os
+from django.conf import settings
+from django.core.files import File
 
 # Dashboard
 class DashboardView(LoginRequiredMixin,View):
@@ -54,13 +58,13 @@ class ProductsView(LoginRequiredMixin,View):
         page_list = []
         page_no = int(request.GET.get('page', '1'))
         total_rows = Product.objects.count()
-        numbers_per_page = 20
+        numbers_per_page = 10
         total_no_of_pages = math.ceil(total_rows / numbers_per_page)
         rows_from = 0
         rows_to = 0
 
         if total_rows > 0:
-            products = Product.objects.all()[(page_no-1)*numbers_per_page : page_no*numbers_per_page].values()
+            products = Product.objects.order_by('-status', 'order').all()[(page_no-1)*numbers_per_page : page_no*numbers_per_page].values()
             rows_from = (page_no-1)*numbers_per_page + 1
             if page_no < total_no_of_pages:
                 rows_to = page_no * numbers_per_page
@@ -216,8 +220,8 @@ class ProductsView(LoginRequiredMixin,View):
             'rows_from' : rows_from,
             'rows_to' : rows_to,
             'rows_total' : total_rows,
-            'title' : 'Add New Product',
-            'pageview' : 'Nazox',
+            'title' : 'Product List',
+            'pageview' : 'Drink',
         }      
         return render(request, 'pages/product/product-list.html',datas)
     def post(self,request):
@@ -248,7 +252,45 @@ class ProductAddView(LoginRequiredMixin,View):
             product_id = uuid.uuid4()
             row = Product(product_id = product_id, product_name = product_name, product_photo = product_image, description = product_description)
             row.save()
-            return render(request, 'pages/product/product-list.html')
+            return HttpResponseRedirect("/products")
+
+class ProductImportView(LoginRequiredMixin,View):
+    def post(self,request):
+        folder='media/dataset/' 
+        if request.method == "POST" and request.FILES['file']:
+            name_file = request.FILES.get('file')
+            fs = FileSystemStorage(location=folder) #defaults to   MEDIA_ROOT  
+            path = folder + name_file.name 
+            if os.path.isfile(path):
+                os.remove(path)
+            filename = fs.save(name_file.name, name_file)
+            order = 0
+            with open(os.path.join(settings.MEDIA_ROOT + 'dataset/', filename)) as namesfile:
+                names = namesfile.readlines()
+                Product.objects.filter(status = 1).delete()    
+                for name in names:
+                    order += 1
+                    product_id = uuid.uuid4()
+                    row = Product(product_id = product_id, product_name = name, status = 1, description = '', order = order)
+                    row.save()
+            return HttpResponseRedirect("/products")
+
+class ProductExportView(LoginRequiredMixin,View):
+    def get(self,request):
+        file_path = os.path.join(settings.MEDIA_ROOT + 'dataset/', 'vodka.names')
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+        verified_products = Product.objects.filter(status = 1)
+        f = open(file_path, 'a', encoding='utf8')
+        names_file = File(f)
+        for pro in verified_products:
+            names_file.write(pro.product_name.strip())
+            names_file.write('\n')
+        names_file.close
+        f.close
+        data = {}
+        data['result'] = 'success'
+        return JsonResponse(data)
 
 class ProductGetView(LoginRequiredMixin,View):
     def get(self, request, id):
@@ -260,6 +302,14 @@ class ProductGetView(LoginRequiredMixin,View):
         datas['description'] = pro.description
         datas['order'] = pro.order
         return JsonResponse(datas)
+
+class ProductDeleteView(LoginRequiredMixin,View):
+    def get(self, request, id):
+        pro = Product.objects.get(id=id)
+        pro.delete()
+        data = {}
+        data['result'] = 'success'
+        return JsonResponse(data)
 
 class ProductEditView(LoginRequiredMixin,View):
     def get(self,request):
