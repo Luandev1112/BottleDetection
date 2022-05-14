@@ -25,6 +25,7 @@ urlpatterns = [
     # Menu    
     path('',views.DashboardView.as_view(),name='dashboard'),# Dashboard
     path('campanies',views.ComapniesView.as_view(),name='companies'),# Companies
+    path('campany-products/<company_id>',views.ComapnyProductView.as_view(),name='company-products'),# Companies
 
     path('products',views.ProductsView.as_view(),name='products'),# Products
     path('product/new',views.ProductAddView.as_view(),name='product-new'),# New Product

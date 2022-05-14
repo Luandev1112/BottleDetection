@@ -25,14 +25,19 @@ import base64
 import cv2
 import numpy as np
 
+def getPage():
+    return 
 # Dashboard
 class DashboardView(LoginRequiredMixin,View):
     def get(self, request):
-        print(request.session)
-        greeting = {}
-        greeting['title'] = "Dashboard"
-        greeting['pageview'] = "Nazox"        
-        return render(request, 'menu/index.html',greeting)
+        datas = {}
+        datas['title'] = "Dashboard"
+        datas['pageview'] = "Drink"      
+        datas['company_count'] = Company.objects.all().count()
+        datas['product_count'] = Product.objects.all().count()
+        datas['image_count'] = StoreImage.objects.all().count()
+        datas['planograms_count'] = 0
+        return render(request, 'pages/index.html',datas)
 
 # Calender
 class BrandsView(LoginRequiredMixin,View):
@@ -57,10 +62,368 @@ class BrandsView(LoginRequiredMixin,View):
 # Chat
 class ComapniesView(LoginRequiredMixin,View):
     def get(self, request):
-        greeting = {}
-        greeting['title'] = "Chat"
-        greeting['pageview'] = "Nazox"        
-        return render(request, 'menu/apps-chat.html',greeting)
+        page_list = []
+        page_no = int(request.GET.get('page', '1'))
+        total_rows = Company.objects.count()
+        numbers_per_page = 10
+        total_no_of_pages = math.ceil(total_rows / numbers_per_page)
+        rows_from = 0
+        rows_to = 0
+
+        if total_rows > 0:
+            companies = Company.objects.order_by('-created_at').all()[(page_no-1)*numbers_per_page : page_no*numbers_per_page].values()
+            rows_from = (page_no-1)*numbers_per_page + 1
+            if page_no < total_no_of_pages:
+                rows_to = page_no * numbers_per_page
+            else :
+                rows_to = total_rows
+        previous_page = page_no - 1
+        if previous_page == 0:
+            prev_active = ''
+        else:
+            prev_active = 'active'
+
+        next_page = page_no + 1
+        if page_no == total_no_of_pages:
+            next_active = ''
+        else:
+            next_active = 'active'
+
+        adjacents = 2
+
+        second_last = total_no_of_pages - 1
+
+        dot_page = {
+            'title' : '...',
+            'value' : '',
+            'active' : ''
+        }
+
+        if total_no_of_pages > 1:
+            if total_no_of_pages <= 10 :    
+                for i in range(1, total_no_of_pages + 1) : 
+                    pg_active = ''
+                    if i == page_no:
+                        pg_active = 'active'
+                    else :
+                        pg_active = ''
+                    
+                    pg ={
+                        'title' : str(i),
+                        'value' : i ,
+                        'active' : pg_active
+                    }
+                    page_list.append(pg)
+            elif total_no_of_pages > 10:
+                if page_no <= 4:
+                    for i in range (1, 8):
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+                    
+                    page_list.append(dot_page)
+                    second_last = total_no_of_pages - 1
+                    second_last_page = {
+                        'title' : str(second_last),
+                        'value' : second_last,
+                        'active' : ''
+                    }
+                    page_list.append(second_last_page)
+                    
+                    last_page = {
+                        'title' : str(total_no_of_pages),
+                        'value' : total_no_of_pages,
+                        'active' : ''
+                    }
+                    page_list.append(last_page)
+                
+                elif page_no > 4 and page_no < total_no_of_pages - 4:
+                    pg_first = {
+                        'title' : '1',
+                        'value' : 1,
+                        'active' : ''
+                    }
+                    page_list.append(pg_first)
+
+                    pg_second = {
+                        'title' : '2',
+                        'value' : 2,
+                        'active' : ''
+                    }
+                    page_list.append(pg_second)
+                    page_list.append(dot_page)
+                    
+                    for i in range(page_no-adjacents, page_no+adjacents+1):
+
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+                    
+                    page_list.append(dot_page)
+
+                    second_last = total_no_of_pages - 1
+                    second_last_page = {
+                        'title' : str(second_last),
+                        'value' : second_last,
+                        'active' : ''
+                    }
+                    page_list.append(second_last_page)
+                    
+                    last_page = {
+                        'title' : str(total_no_of_pages),
+                        'value' : total_no_of_pages,
+                        'active' : ''
+                    }
+                    page_list.append(last_page)
+                
+                else:
+                    pg_first = {
+                        'title' : '1',
+                        'value' : 1,
+                        'active' : ''
+                    }
+                    page_list.append(pg_first)
+
+                    pg_second = {
+                        'title' : '2',
+                        'value' : 2,
+                        'active' : ''
+                    }
+                    page_list.append(pg_second)
+                    page_list.append(dot_page)
+
+                    for i in range(total_no_of_pages-6, total_no_of_pages+1):
+    
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+        for company in companies:
+            produts_number = CompanyProduct.objects.filter(company_id=company['id']).count()
+            images_number = StoreImage.objects.filter(company_id=company['company_id']).count()
+            print(images_number)
+            planograms_number = 0
+            company['products_number'] = produts_number
+            company['images_number'] = images_number
+            company['planograms_number'] = planograms_number
+        datas = {
+            'companies' : companies,
+            'pages' : page_list,
+            'rows_from' : rows_from,
+            'rows_to' : rows_to,
+            'rows_total' : total_rows,
+            'title' : 'Product List',
+            'pageview' : 'Drink',
+        }           
+        return render(request, 'pages/company/company-list.html',datas)
+
+class ComapnyProductView(LoginRequiredMixin,View):
+    def get(self, request, company_id):
+        page_list = []
+        page_no = int(request.GET.get('page', '1'))
+        total_rows = CompanyProduct.objects.filter(company_id=company_id).count()
+        numbers_per_page = 10
+        total_no_of_pages = math.ceil(total_rows / numbers_per_page)
+        rows_from = 0
+        rows_to = 0
+
+        if total_rows > 0:
+            company_products = CompanyProduct.objects.filter(company_id=company_id).order_by('-created_at')[(page_no-1)*numbers_per_page : page_no*numbers_per_page].values()
+            rows_from = (page_no-1)*numbers_per_page + 1
+            if page_no < total_no_of_pages:
+                rows_to = page_no * numbers_per_page
+            else :
+                rows_to = total_rows
+        previous_page = page_no - 1
+        if previous_page == 0:
+            prev_active = ''
+        else:
+            prev_active = 'active'
+
+        next_page = page_no + 1
+        if page_no == total_no_of_pages:
+            next_active = ''
+        else:
+            next_active = 'active'
+
+        adjacents = 2
+
+        second_last = total_no_of_pages - 1
+
+        dot_page = {
+            'title' : '...',
+            'value' : '',
+            'active' : ''
+        }
+
+        if total_no_of_pages > 1:
+            if total_no_of_pages <= 10 :    
+                for i in range(1, total_no_of_pages + 1) : 
+                    pg_active = ''
+                    if i == page_no:
+                        pg_active = 'active'
+                    else :
+                        pg_active = ''
+                    
+                    pg ={
+                        'title' : str(i),
+                        'value' : i ,
+                        'active' : pg_active
+                    }
+                    page_list.append(pg)
+            elif total_no_of_pages > 10:
+                if page_no <= 4:
+                    for i in range (1, 8):
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+                    
+                    page_list.append(dot_page)
+                    second_last = total_no_of_pages - 1
+                    second_last_page = {
+                        'title' : str(second_last),
+                        'value' : second_last,
+                        'active' : ''
+                    }
+                    page_list.append(second_last_page)
+                    
+                    last_page = {
+                        'title' : str(total_no_of_pages),
+                        'value' : total_no_of_pages,
+                        'active' : ''
+                    }
+                    page_list.append(last_page)
+                
+                elif page_no > 4 and page_no < total_no_of_pages - 4:
+                    pg_first = {
+                        'title' : '1',
+                        'value' : 1,
+                        'active' : ''
+                    }
+                    page_list.append(pg_first)
+
+                    pg_second = {
+                        'title' : '2',
+                        'value' : 2,
+                        'active' : ''
+                    }
+                    page_list.append(pg_second)
+                    page_list.append(dot_page)
+                    
+                    for i in range(page_no-adjacents, page_no+adjacents+1):
+
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+                    
+                    page_list.append(dot_page)
+
+                    second_last = total_no_of_pages - 1
+                    second_last_page = {
+                        'title' : str(second_last),
+                        'value' : second_last,
+                        'active' : ''
+                    }
+                    page_list.append(second_last_page)
+                    
+                    last_page = {
+                        'title' : str(total_no_of_pages),
+                        'value' : total_no_of_pages,
+                        'active' : ''
+                    }
+                    page_list.append(last_page)
+                
+                else:
+                    pg_first = {
+                        'title' : '1',
+                        'value' : 1,
+                        'active' : ''
+                    }
+                    page_list.append(pg_first)
+
+                    pg_second = {
+                        'title' : '2',
+                        'value' : 2,
+                        'active' : ''
+                    }
+                    page_list.append(pg_second)
+                    page_list.append(dot_page)
+
+                    for i in range(total_no_of_pages-6, total_no_of_pages+1):
+    
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+        for company_product in company_products:
+            product = Product.objects.get(id = company_product['product_id'])
+            pro_name = product.product_name
+            pro_status = product.status
+            pro_photo = product.product_photo
+            upload_date = product.created_at
+            print(pro_name)
+            company_product['product_name'] = pro_name
+            company_product['status'] = pro_status
+            company_product['product_photo'] = pro_photo
+            company_product['upload_date'] = upload_date
+            
+        datas = {
+            'company_products' : company_products,
+            'company_id' : company_id,
+            'pages' : page_list,
+            'rows_from' : rows_from,
+            'rows_to' : rows_to,
+            'rows_total' : total_rows,
+            'title' : 'Product List',
+            'pageview' : 'Drink',
+        }      
+        return render(request, 'pages/product/company-products.html',datas)
 
 class ProductsView(LoginRequiredMixin,View):
     def get(self, request):
@@ -251,7 +614,7 @@ class ProductAddView(LoginRequiredMixin,View):
     def get(self, request):
         datas = {}
         datas['title'] = "Add New Product"
-        datas['pageview'] = "Nazox"    
+        datas['pageview'] = "Drink"    
         return render(request, 'pages/product/product-new.html',datas)
     def post(self,request):
         if request.method == "POST":
@@ -338,36 +701,213 @@ class ProductEditView(LoginRequiredMixin,View):
 class PlanogramsView(LoginRequiredMixin,View):
     def get(self, request):
         greeting = {}
-        greeting['title'] = "Chat"
-        greeting['pageview'] = "Nazox"        
+        greeting['title'] = "Planogram List"
+        greeting['pageview'] = "Drink"        
         return render(request, 'menu/apps-chat.html',greeting)
 
 class PlanogramAddView(LoginRequiredMixin,View):
     def get(self, request):
         greeting = {}
-        greeting['title'] = "Chat"
-        greeting['pageview'] = "Nazox"        
+        greeting['title'] = "Add new Planogram"
+        greeting['pageview'] = "Drink"        
         return render(request, 'menu/apps-chat.html',greeting)
         
 class ImageListView(LoginRequiredMixin,View):
     def get(self, request):
-        greeting = {}
-        greeting['title'] = "Chat"
-        greeting['pageview'] = "Nazox"        
-        return render(request, 'menu/apps-chat.html',greeting)
+        page_list = []
+        page_no = int(request.GET.get('page', '1'))
+        total_rows = StoreImage.objects.count()
+        numbers_per_page = 10
+        total_no_of_pages = math.ceil(total_rows / numbers_per_page)
+        rows_from = 0
+        rows_to = 0
+
+        if total_rows > 0:
+            images = StoreImage.objects.order_by('-created_at').all()[(page_no-1)*numbers_per_page : page_no*numbers_per_page].values()
+            rows_from = (page_no-1)*numbers_per_page + 1
+            if page_no < total_no_of_pages:
+                rows_to = page_no * numbers_per_page
+            else :
+                rows_to = total_rows
+        previous_page = page_no - 1
+        if previous_page == 0:
+            prev_active = ''
+        else:
+            prev_active = 'active'
+
+        next_page = page_no + 1
+        if page_no == total_no_of_pages:
+            next_active = ''
+        else:
+            next_active = 'active'
+
+        adjacents = 2
+
+        second_last = total_no_of_pages - 1
+
+        dot_page = {
+            'title' : '...',
+            'value' : '',
+            'active' : ''
+        }
+
+        if total_no_of_pages > 1:
+            if total_no_of_pages <= 10 :    
+                for i in range(1, total_no_of_pages + 1) : 
+                    pg_active = ''
+                    if i == page_no:
+                        pg_active = 'active'
+                    else :
+                        pg_active = ''
+                    
+                    pg ={
+                        'title' : str(i),
+                        'value' : i ,
+                        'active' : pg_active
+                    }
+                    page_list.append(pg)
+            elif total_no_of_pages > 10:
+                if page_no <= 4:
+                    for i in range (1, 8):
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+                    
+                    page_list.append(dot_page)
+                    second_last = total_no_of_pages - 1
+                    second_last_page = {
+                        'title' : str(second_last),
+                        'value' : second_last,
+                        'active' : ''
+                    }
+                    page_list.append(second_last_page)
+                    
+                    last_page = {
+                        'title' : str(total_no_of_pages),
+                        'value' : total_no_of_pages,
+                        'active' : ''
+                    }
+                    page_list.append(last_page)
+                
+                elif page_no > 4 and page_no < total_no_of_pages - 4:
+                    pg_first = {
+                        'title' : '1',
+                        'value' : 1,
+                        'active' : ''
+                    }
+                    page_list.append(pg_first)
+
+                    pg_second = {
+                        'title' : '2',
+                        'value' : 2,
+                        'active' : ''
+                    }
+                    page_list.append(pg_second)
+                    page_list.append(dot_page)
+                    
+                    for i in range(page_no-adjacents, page_no+adjacents+1):
+
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+                    
+                    page_list.append(dot_page)
+
+                    second_last = total_no_of_pages - 1
+                    second_last_page = {
+                        'title' : str(second_last),
+                        'value' : second_last,
+                        'active' : ''
+                    }
+                    page_list.append(second_last_page)
+                    
+                    last_page = {
+                        'title' : str(total_no_of_pages),
+                        'value' : total_no_of_pages,
+                        'active' : ''
+                    }
+                    page_list.append(last_page)
+                
+                else:
+                    pg_first = {
+                        'title' : '1',
+                        'value' : 1,
+                        'active' : ''
+                    }
+                    page_list.append(pg_first)
+
+                    pg_second = {
+                        'title' : '2',
+                        'value' : 2,
+                        'active' : ''
+                    }
+                    page_list.append(pg_second)
+                    page_list.append(dot_page)
+
+                    for i in range(total_no_of_pages-6, total_no_of_pages+1):
+    
+                        if i == page_no:
+                            pg_active = 'active'
+                        else:
+                            pg_active = ''
+
+                        pg ={
+                            'title' : str(i),
+                            'value' : i ,
+                            'active' : pg_active
+                        }
+                        page_list.append(pg)
+        for image in images:
+            resultprocess = ProcessResult.objects.get(store_image_id = image['id'])
+            print(resultprocess)
+            company_name = Company.objects.get(company_id = image['company_id']).company_name
+            image['company_name'] = company_name
+            image['result_status'] = resultprocess.result
+            if resultprocess.result == 1:
+                result_image = ResultImage.objects.get(result_id = resultprocess.id)
+                image['result_photo'] = result_image.result_image_name
+            else :
+                image['result_photo'] = ""
+
+        datas = {
+            'images' : images,
+            'pages' : page_list,
+            'rows_from' : rows_from,
+            'rows_to' : rows_to,
+            'rows_total' : total_rows,
+            'title' : 'Images List',
+            'pageview' : 'Drink',
+        }      
+        return render(request, 'pages/image/image-list.html',datas)
         
 class ProcessListView(LoginRequiredMixin,View):
     def get(self, request):
         greeting = {}
-        greeting['title'] = "Chat"
-        greeting['pageview'] = "Nazox"        
+        greeting['title'] = "Process"
+        greeting['pageview'] = "Drink"        
         return render(request, 'menu/apps-chat.html',greeting)
 
 class AddImageView(LoginRequiredMixin,View):
     def get(self, request):
         greeting = {}
         greeting['title'] = "Add Image"
-        greeting['pageview'] = "Nazox"        
+        greeting['pageview'] = "Drink"        
         return render(request, 'pages/image/add-image.html',greeting)
     def post(self,request):
         if request.method == "POST":
@@ -436,9 +976,9 @@ class AddImageView(LoginRequiredMixin,View):
                         class_ids.append(class_id)
 
                         class_name = classes[class_id]
-                        print(class_name)
+                        # print(class_name)
                         product = Product.objects.get(product_name=class_name)
-                        print(product)
+                        # print(product)
                         if CompanyProduct.objects.filter(company_id=company_row.id, product_id = product.id).count() == 0:
                             company_product = CompanyProduct(company_id=company_row.id, product_id = product.id)
                             company_product.save()
@@ -463,5 +1003,5 @@ class AddImageView(LoginRequiredMixin,View):
                 process_result.save()
                 result_image = ResultImage(result_id = process_result.id, result_image_name = 'result/'+result_image_name)
                 result_image.save()
-            data['img'] = "img"
-            return JsonResponse(data)
+            data['result_image'] = result_image
+            return render(request, 'pages/image/show-image.html',data)
