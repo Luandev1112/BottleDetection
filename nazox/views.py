@@ -11,6 +11,8 @@ from layouts.models import Product
 from layouts.models import Company
 from layouts.models import StoreImage
 from layouts.models import ResultImage
+from layouts.models import ProcessResult
+from layouts.models import CompanyProduct
 import uuid
 import math
 from datetime import datetime
@@ -18,6 +20,10 @@ from django.core.files.storage import FileSystemStorage
 import os
 from django.conf import settings
 from django.core.files import File
+import base64
+
+import cv2
+import numpy as np
 
 # Dashboard
 class DashboardView(LoginRequiredMixin,View):
@@ -73,13 +79,13 @@ class ProductsView(LoginRequiredMixin,View):
                 rows_to = page_no * numbers_per_page
             else :
                 rows_to = total_rows
-        previous_page = page_no - 1;
+        previous_page = page_no - 1
         if previous_page == 0:
             prev_active = ''
         else:
             prev_active = 'active'
 
-        next_page = page_no + 1;
+        next_page = page_no + 1
         if page_no == total_no_of_pages:
             next_active = ''
         else:
@@ -87,7 +93,7 @@ class ProductsView(LoginRequiredMixin,View):
 
         adjacents = 2
 
-        second_last = total_no_of_pages - 1;
+        second_last = total_no_of_pages - 1
 
         dot_page = {
             'title' : '...',
@@ -268,13 +274,13 @@ class ProductImportView(LoginRequiredMixin,View):
                 os.remove(path)
             filename = fs.save(name_file.name, name_file)
             order = 0
-            with open(os.path.join(settings.MEDIA_ROOT + 'dataset/', filename)) as namesfile:
+            with open(os.path.join(settings.MEDIA_ROOT + 'dataset/', filename), encoding='utf8') as namesfile:
                 names = namesfile.readlines()
                 Product.objects.filter(status = 1).delete()    
                 for name in names:
                     order += 1
                     product_id = uuid.uuid4()
-                    row = Product(product_id = product_id, product_name = name, status = 1, description = '', order = order)
+                    row = Product(product_id = product_id, product_name = name.strip(), status = 1, description = '', order = order)
                     row.save()
             return HttpResponseRedirect("/products")
 
@@ -372,10 +378,90 @@ class AddImageView(LoginRequiredMixin,View):
             program_id = request.POST.get('program_id')
             program_name = request.POST.get('program_name')
             # add to company table
-            company_row = Company(company_id=company_id, company_name=company_name);
-            company_row.save()
+            if Company.objects.filter(company_id=company_id).count() > 0:
+                company_row = Company.objects.get(company_id=company_id)
+                company_row.company_name = company_name
+                company_row.save()
+            else :
+                company_row = Company(company_id=company_id, company_name=company_name)
+                company_row.save()
             # add to store_image table
             store_row = StoreImage(user_id=user_id, company_id=company_id, photo_name = store_image)
             store_row.save()
 
-            return HttpResponseRedirect("/products")
+            # Detect images
+            net = cv2.dnn.readNet("media/dataset/yolov4-custom_best.weights", "media/dataset/yolov4-custom.cfg")
+            classes = []
+            classname_path = os.path.join(settings.MEDIA_ROOT + 'dataset/', 'vodka.names')
+            with open(classname_path, "r", encoding='utf8') as f:
+                classes = [line.strip() for line in f.readlines()]
+            layer_names = net.getLayerNames()
+            output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
+            colors = np.random.uniform(0, 255, size=(len(classes), 3))
+
+            img = cv2.imread(os.path.join(settings.BASE_DIR + store_row.photo_name.url))
+            img = cv2.resize(img, None, fx=0.4, fy=0.4)
+            height, width, channels = img.shape
+
+            # Detecting objects
+            blob = cv2.dnn.blobFromImage(img, 0.00392, (448, 448), (0, 0, 0), True, crop=False)
+            net.setInput(blob)
+            outs = net.forward(output_layers)
+
+            # Showing informations on the screen
+            class_ids = []
+            confidences = []
+            boxes = []
+            new_classes = []
+            new_boxes = []
+
+            for out in outs:
+                for detection in out:
+                    scores = detection[5:]
+                    class_id = np.argmax(scores)
+                    confidence = scores[class_id]
+                    if confidence > 0.7:
+                        # Object detected
+                        center_x = int(detection[0] * width)
+                        center_y = int(detection[1] * height)
+                        w = int(detection[2] * width)
+                        h = int(detection[3] * height)
+
+                        x = int(center_x - w / 2)
+                        y = int(center_y - h / 2)
+                        # cv2.rectangle(img, (x, y),(x + w ,y + h),(0, 255, 0), 2)
+
+                        boxes.append([x, y, w, h])
+                        confidences.append(float(confidence))
+                        class_ids.append(class_id)
+
+                        class_name = classes[class_id]
+                        print(class_name)
+                        product = Product.objects.get(product_name=class_name)
+                        print(product)
+                        if CompanyProduct.objects.filter(company_id=company_row.id, product_id = product.id).count() == 0:
+                            company_product = CompanyProduct(company_id=company_row.id, product_id = product.id)
+                            company_product.save()
+
+            indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+            # font = cv2.FONT_HERSHEY_PLAIN
+
+            for i in range(len(boxes)):
+                if i in indexes:
+                    x, y, w, h = boxes[i]
+                    label = str(classes[class_ids[i]])
+                    color = colors[class_ids[i]]
+                    cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                    cv2.putText(img, label, (x, y + 15), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1)
+            result_image_name = store_row.photo_name.name.replace('store/', '')
+            cv2.imwrite(os.path.join(settings.MEDIA_ROOT + 'result/', result_image_name), img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            data = {}
+            with open(os.path.join(settings.MEDIA_ROOT + 'result/', result_image_name), 'rb') as image_file:
+                process_result = ProcessResult(store_image_id = store_row.id, result=1)
+                process_result.save()
+                result_image = ResultImage(result_id = process_result.id, result_image_name = 'result/'+result_image_name)
+                result_image.save()
+            data['img'] = "img"
+            return JsonResponse(data)
