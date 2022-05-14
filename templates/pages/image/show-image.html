@@ -1,0 +1,24 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+
+{% block content %}    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <img src="/media/{{ result_image.result_image_name }}" width="100%">             
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div>
+    <!-- end row -->
+{% endblock content %}	
+
+{% block extra_javascript %}
+        <!-- bs custom file input plugin -->
+        <script src="{% static 'libs/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+
+        <script src="{% static 'js/pages/form-element.init.js' %}"></script>
+{% endblock extra_javascript %}
+
