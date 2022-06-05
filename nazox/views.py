@@ -930,7 +930,7 @@ class AddImageView(LoginRequiredMixin,View):
             store_row.save()
 
             # Detect images
-            net = cv2.dnn.readNet("media/dataset/yolov4-custom_best.weights", "media/dataset/yolov4-custom.cfg")
+            net = cv2.dnn.readNet(os.path.join(settings.MEDIA_ROOT, 'dataset/yolov4-custom_best.weights'), os.path.join(settings.MEDIA_ROOT, 'dataset/yolov4-custom.cfg'))
             classes = []
             classname_path = os.path.join(settings.MEDIA_ROOT + 'dataset/', 'vodka.names')
             with open(classname_path, "r", encoding='utf8') as f:

@@ -79,7 +79,7 @@
                     </li>
                     {% for page in pages %}
                         <li class="paginate_button page-item {{ page.active }}">
-                            <a href="{% url 'company-products' company_id %}?page={{page.value}}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
+                            <a href="{% url 'imagelist' %}?page={{page.value}}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
                         </li>
                     {% endfor %}
                     <li class="paginate_button page-item previous disabled" id="key-datatable_previous">
