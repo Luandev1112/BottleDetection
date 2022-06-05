@@ -701,4 +701,83 @@ class AddImageView(LoginRequiredMixin,View):
             store_row = StoreImage(user_id=user_id, company_id=company_id, photo_name = store_image)
             store_row.save()
 
+<<<<<<< HEAD
             return HttpResponseRedirect("/products")
+=======
+            # Detect images
+            net = cv2.dnn.readNet(os.path.join(settings.MEDIA_ROOT, 'dataset/yolov4-custom_best.weights'), os.path.join(settings.MEDIA_ROOT, 'dataset/yolov4-custom.cfg'))
+            classes = []
+            classname_path = os.path.join(settings.MEDIA_ROOT + 'dataset/', 'vodka.names')
+            with open(classname_path, "r", encoding='utf8') as f:
+                classes = [line.strip() for line in f.readlines()]
+            layer_names = net.getLayerNames()
+            output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
+            colors = np.random.uniform(0, 255, size=(len(classes), 3))
+
+            img = cv2.imread(os.path.join(settings.BASE_DIR + store_row.photo_name.url))
+            img = cv2.resize(img, None, fx=0.4, fy=0.4)
+            height, width, channels = img.shape
+
+            # Detecting objects
+            blob = cv2.dnn.blobFromImage(img, 0.00392, (448, 448), (0, 0, 0), True, crop=False)
+            net.setInput(blob)
+            outs = net.forward(output_layers)
+
+            # Showing informations on the screen
+            class_ids = []
+            confidences = []
+            boxes = []
+            new_classes = []
+            new_boxes = []
+
+            for out in outs:
+                for detection in out:
+                    scores = detection[5:]
+                    class_id = np.argmax(scores)
+                    confidence = scores[class_id]
+                    if confidence > 0.7:
+                        # Object detected
+                        center_x = int(detection[0] * width)
+                        center_y = int(detection[1] * height)
+                        w = int(detection[2] * width)
+                        h = int(detection[3] * height)
+
+                        x = int(center_x - w / 2)
+                        y = int(center_y - h / 2)
+                        # cv2.rectangle(img, (x, y),(x + w ,y + h),(0, 255, 0), 2)
+
+                        boxes.append([x, y, w, h])
+                        confidences.append(float(confidence))
+                        class_ids.append(class_id)
+
+                        class_name = classes[class_id]
+                        # print(class_name)
+                        product = Product.objects.get(product_name=class_name)
+                        # print(product)
+                        if CompanyProduct.objects.filter(company_id=company_row.id, product_id = product.id).count() == 0:
+                            company_product = CompanyProduct(company_id=company_row.id, product_id = product.id)
+                            company_product.save()
+
+            indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+            # font = cv2.FONT_HERSHEY_PLAIN
+
+            for i in range(len(boxes)):
+                if i in indexes:
+                    x, y, w, h = boxes[i]
+                    label = str(classes[class_ids[i]])
+                    color = colors[class_ids[i]]
+                    cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                    cv2.putText(img, label, (x, y + 15), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1)
+            result_image_name = store_row.photo_name.name.replace('store/', '')
+            cv2.imwrite(os.path.join(settings.MEDIA_ROOT + 'result/', result_image_name), img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            data = {}
+            with open(os.path.join(settings.MEDIA_ROOT + 'result/', result_image_name), 'rb') as image_file:
+                process_result = ProcessResult(store_image_id = store_row.id, result=1)
+                process_result.save()
+                result_image = ResultImage(result_id = process_result.id, result_image_name = 'result/'+result_image_name)
+                result_image.save()
+            data['result_image'] = result_image
+            return render(request, 'pages/image/show-image.html',data)
+>>>>>>> bcf89349451368637b914d483a585fa131e0aaef
