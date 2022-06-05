@@ -1,5 +1,6 @@
 (function(e){
     "use strict";
+    var product_arr = [];
     e(".image-popup-vertical-fit").magnificPopup({
         type:"image",
         closeOnContentClick:!0,

@@ -20,7 +20,6 @@ from nazox import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
     # Menu    
     path('',views.DashboardView.as_view(),name='dashboard'),# Dashboard
@@ -35,6 +34,8 @@ urlpatterns = [
 
     path('planograms',views.PlanogramsView.as_view(),name='planograms'),# Planograms
     path('planogram/new',views.PlanogramAddView.as_view(),name='planogram-new'),# New Planogram
+    path('plangram-delete/<id>',views.PlanogramDeleteView.as_view(),name='planogram-delete'),# DELETE Product
+    path('planogram/<id>/edit',views.PlanogramEditView.as_view(),name='planogram-edit'),# Edit Planogram
 
     path('imagelist',views.ImageListView.as_view(),name='imagelist'),# New Planogram
     path('processlist',views.ProcessListView.as_view(),name='processlist'),# New Planogram

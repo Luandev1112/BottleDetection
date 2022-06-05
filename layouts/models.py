@@ -51,7 +51,7 @@ class ComanyProduct(models.Model):
 
 class Planogram(models.Model):
     id=models.AutoField(primary_key=True)
-    planogram_id=models.IntegerField(default=0)
+    planogram_id=models.CharField(max_length=255, default=None)
     planogram_name=models.CharField(max_length=255, default=None)
     planogram_photo=models.ImageField(upload_to='planograms')
     description=models.TextField(default=None)
@@ -94,6 +94,6 @@ class ProcessResult(models.Model):
 class ResultImage(models.Model):
     id=models.AutoField(primary_key=True)
     result_id=models.IntegerField(default=0)
-    result_image_name=models.ImageField(upload_to=get_result_path)
+    result_image_name=models.CharField(max_length=255, default=None)
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)
