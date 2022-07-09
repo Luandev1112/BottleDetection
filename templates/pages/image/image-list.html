@@ -20,11 +20,11 @@
                     <table id="alternative-page-datatable" class="table w-100" style="table-layout:fixed">
                         <thead>
                             <tr>
-                                <th style="width: 50px">No</th>
+                                <th style="width: 60px">No</th>
                                 <th>Image</th>
-                                <th>Upload Date</th>
                                 <th>Company Name</th>
                                 <th>User ID</th>
+                                <th>Upload Date</th>
                                 <th>Porcess Result</th>
                                 <th>Result Image</th>
                             </tr>
@@ -32,15 +32,15 @@
                         <tbody>
                             {% for img in images %}
                             <tr> 
-                                <td> {{ forloop.counter }} </td>
+                                <td> {{ img.index }} </td>
                                 <td>
                                     <a class="image-popup-vertical-fit" href="/media/{{ img.photo_name }}" title="">
                                     <img src="/media/{{ img.photo_name }}" height="50px" />
                                     </a>
                                 </td>
-                                <td>{{ img.created_at }}</td>
                                 <td>{{ img.company_name }}</td>
                                 <td>{{ img.user_id }}</td>
+                                <td>{{ img.created_at }}</td>
                                 <td>
                                     {% if img.result_status == 0 %}
                                         <div class="btn btn-danger">

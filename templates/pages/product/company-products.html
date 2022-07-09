@@ -20,24 +20,26 @@
                     <table id="alternative-page-datatable" class="table w-100" style="table-layout:fixed">
                         <thead>
                             <tr>
-                                <th style="width: 50px">No</th>
+                                <th style="width: 60px">No</th>
                                 <th>Photo</th>
+                                <th>
+                                    Product Name
+                                </th>
                                 <th>Upload Date</th>
-                                <th>Product Name</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for company_product in company_products %}
                             <tr> 
-                                <td> {{ forloop.counter }} </td>
+                                <td> {{ company_product.index }} </td>
                                 <td>
                                     <a class="image-popup-vertical-fit" href="/media/{{ company_product.product_photo }}" title="{{ company_product.product_name }}">
                                     <img src="/media/{{ company_product.product_photo }}" height="50px" />
                                     </a>
                                 </td>
-                                <td>{{ company_product.upload_date }}</td>
                                 <td>{{ company_product.product_name }}</td>
+                                <td>{{ company_product.upload_date }}</td>
                                 <td>
                                     {% if company_product.status == 0 %}
                                         <div class="btn btn-danger">

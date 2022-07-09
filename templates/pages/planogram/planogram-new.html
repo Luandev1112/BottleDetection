@@ -1,0 +1,119 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link href="{% static 'libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css" />  
+
+    <!-- twitter-bootstrap-wizard css -->
+    <link rel="stylesheet" href="{% static 'libs/twitter-bootstrap-wizard/prettify.css' %}">
+
+    <!-- select2 css -->
+    <link href="{% static 'libs/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <link href="{% static 'libs/magnific-popup/magnific-popup.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- dropzone css -->
+    <link href="{% static 'libs/dropzone/min/dropzone.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock extra_css %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="add_planogram_form"  method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3 col-lg-7">
+                            <label class="form-label" for="planogram_name">Planogram Name</label>
+                            <input id="planogram_name" name="planogram_name" type="text" class="form-control">
+                        </div>
+                        <div class="mb-3 col-lg-7">
+                            <label class="form-label" for="status">Status</label>
+                            <select class="form-control" name="status" id="planogram_status">
+                                <option value="0">Unverified</option>
+                                <option value="1">Verified</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-lg-7">
+                            <label class="form-label" for="productdesc">Planogram Description</label>
+                            <textarea class="form-control" id="planogram_description" name="plangram_description" rows="5"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="product-list">
+                                <div class="product-card">
+                                
+                                </div>
+                                <div class="product-add-block">
+                                    <a href="#product-form" class="product-add-btn popup-form">
+                                        <i class="ri-add-circle-fill"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 text-end">
+                            <button class="btn btn-primary btn_planogram_add" type="button">Add Planogram</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mfp-hide mfp-popup-form mx-auto" id="product-form">
+        <div class="card-body">
+            <h4 class="mb-4">Add Product</h4>   
+            <form>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <label class="form-label" for="status">Select Product</label>
+                            <select class="form-control" name="status" id="product_index">
+                                {% for product in products %}
+                                    <option value="{{ product.index }}">{{ product.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <label class="form-label" for="order">Select Product Count</label>
+                            <input type="number" class="form-control" id="product_count" name="product_count" placeholder="Enter Product Count">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-primary btn_product_add">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- end row -->
+{% endblock content %}
+{% block extra_javascript %}
+    <!-- twitter-bootstrap-wizard js -->
+    <script src="{% static 'libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+
+    <script src="{% static 'libs/twitter-bootstrap-wizard/prettify.js' %}"></script>
+
+    <!-- select 2 plugin -->
+    <script src="{% static 'libs/select2/js/select2.min.js' %}"></script>
+
+    <!-- dropzone plugin -->
+    <script src="{% static 'libs/dropzone/min/dropzone.min.js' %}"></script>
+
+    <script src="{% static 'libs/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+
+    <script type="text/javascript">
+        var page = 'add';
+        var str_products = ("{{ json_products }}");
+        var products = JSON.parse(str_products.replace(/&quot;/g,'"'));
+    </script>
+
+    <!-- init js -->
+    <script src="{% static 'js/pages/planogram.init.js' %}"></script>
+{% endblock extra_javascript %}

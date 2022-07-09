@@ -13,6 +13,12 @@
 {% endblock extra_css %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-12">
+            <a class="btn btn-primary btn_update_company">Synchronize</a>
+        </div>
+    </div> 
+    {% csrf_token %}
     <div class="row mt-3">
         <div class="col-12">
             <div class="card">
@@ -20,17 +26,26 @@
                     <table id="alternative-page-datatable" class="table w-100" style="table-layout:fixed">
                         <thead>
                             <tr>
-                                <th style="width: 50px">No</th>
-                                <th>Company Name</th>
-                                <th>Number of Products</th>
-                                <th>Number of Images</th>
-                                <th>Number of Planograms</th>
+                                <th class="align-top" style="width: 60px">No</th>
+                                <th class="align-top">
+                                    Company Name
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" id="search_company" value="{{search_name}}" placeholder="">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text input-group-sm ri-search-line" id="btn_search_company">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="align-top">Number of Products</th>
+                                <th class="align-top">Number of Images</th>
+                                <th class="align-top">Number of Planograms</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for company in companies %}
                             <tr> 
-                                <td> {{ forloop.counter }} </td>
+                                <td> {{ company.index }} </td>
                                 <td>
                                     {{ company.company_name }}
                                 </td>
@@ -46,63 +61,6 @@
                             {% endfor %}
                         </tbody>
                     </table>
-
-                    <div class="card mfp-hide mfp-popup-form mx-auto" id="edit-form">
-                        <div class="card-body">
-                            <h4 class="mb-4">Edit Product</h4>   
-                            <form id="product_edit_form" action="{% url 'products' %}" method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <input type="hidden" name="id" id="id" >
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="name">Change Photo</label>
-                                            <input type="file" class="form-control" id="file" name="file">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="name">Product Name</label>
-                                            <input type="text" class="form-control" id="name" name="product_name" placeholder="Enter Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="status">Status</label>
-                                            <select class="form-control" name="status" id="product_status">
-                                                <option value="0"> Not Verified </option>
-                                                <option value="1"> Verified </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="order">Order</label>
-                                            <input type="number" class="form-control" id="product_order" name="product_order" placeholder="Enter Order Number">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="description">Description</label>
-                                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="text-end mt-3">
-                                            <button type="submit" class="btn btn-primary">Edit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
                 </div> <!-- end card body-->
             </div> <!-- end card -->
         </div><!-- end col-->
@@ -121,7 +79,7 @@
                     </li>
                     {% for page in pages %}
                         <li class="paginate_button page-item {{ page.active }}">
-                            <a href="{% url 'companies' %}?page={{page.value}}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
+                            <a href="{{ page.page_url }}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
                         </li>
                     {% endfor %}
                     <li class="paginate_button page-item previous disabled" id="key-datatable_previous">
@@ -139,5 +97,5 @@
     <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'libs/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'js/pages/product-list.js' %}"></script>
+    <script src="{% static 'js/pages/company-list.js' %}"></script>
 {% endblock extra_javascript %}

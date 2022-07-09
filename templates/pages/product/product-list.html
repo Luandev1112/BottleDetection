@@ -26,39 +26,57 @@
                     <table id="alternative-page-datatable" class="table w-100" style="table-layout:fixed">
                         <thead>
                             <tr>
-                                <th style="width: 50px">No</th>
-                                <th>Photo</th>
-                                <th>Product ID</th>
-                                <th>Product Name</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Edit</th>
+                                <th class="align-top" style="width: 60px">No</th>
+                                <th class="align-top text-center" style="width: 100px">Product Photo</th>
+                                <th class="align-top text-center" style="width: 100px">Images</th>
+                                <th class="align-top">
+                                    Product Name
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" id="search_product" value="{{product_search}}" placeholder="">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text input-group-sm ri-search-line" id="btn_search_product">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="align-top">
+                                    Company
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" id="search_company" placeholder="" value="{{ company_search }}">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text input-group-sm ri-search-line" id="btn_search_company">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="align-top text-center" style="width: 120px">Status</th>
+                                <th class="align-top text-center" style="width: 200px">Edit</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for product in products %}
                             <tr> 
-                                <td>{{ product.order }} </td>
-                                <td>
+                                <td>{{ product.index }} </td>
+                                <td class="text-center">
                                     <a class="image-popup-vertical-fit" href="/media/{{ product.product_photo }}" title="{{ product.product_name }}">
                                     <img src="/media/{{ product.product_photo }}" height="50px" />
                                     </a>
                                 </td>
-                                <td>{{ product.product_id }}</td>
+                                <td class="text-center"><a>16</a></td>
                                 <td>{{ product.product_name }}</td>
-                                <td>{{ product.description }}</td>
-                                <td>
+                                <td>{{ product.company_name }}</td>
+                                <td class="text-center">
                                     {% if product.status == 0 %}
-                                        <div class="btn btn-danger">
+                                        <div class="btn text-danger">
                                             Not Verified
                                         </div>
                                     {% elif product.status == 1 %}
-                                        <div class="btn btn-primary">
+                                        <div class="btn text-django">
                                             Verified
                                         </div>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a type="button" class="popup-form btn btn-info" href="#edit-form" product_id="{{ product.id }}">
                                         <i class="ri-edit-box-line"></i>
                                     </a>
@@ -82,6 +100,18 @@
                                         <div class="mb-3">
                                             <label class="form-label" for="name">Change Photo</label>
                                             <input type="file" class="form-control" id="file" name="file">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="name">Select Company</label>
+                                            <select class="form-control" name="company_id" id="company_id">
+                                                <option value="0"> - </option>
+                                                {% for company in companies %}
+                                                <option value="{{ company.id }}"> {{ company.company_name }} </option>
+                                                {% endfor %}
+                                                
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +175,7 @@
                     </li>
                     {% for page in pages %}
                         <li class="paginate_button page-item {{ page.active }}">
-                            <a href="{% url 'products' %}?page={{page.value}}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
+                            <a href="{{page.page_url}}" aria-controls="key-datatable" data-dt-idx="1" tabindex="0" class="page-link">{{ page.title }}</a>
                         </li>
                     {% endfor %}
                     <li class="paginate_button page-item previous disabled" id="key-datatable_previous">
@@ -160,8 +190,6 @@
 
 {% block extra_javascript %}
     <!-- Required datatable js -->
-    <script src="{% static 'libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'libs/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/pages/product-list.js' %}"></script>
 {% endblock extra_javascript %}
