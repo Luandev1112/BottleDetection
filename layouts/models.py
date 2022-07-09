@@ -31,27 +31,45 @@ class Company(models.Model):
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.company_name
+
 class Product(models.Model):
+
     id=models.AutoField(primary_key=True)
     product_id=models.CharField(max_length=255, default=None)
     product_name=models.CharField(max_length=255, default=None)
     product_photo=models.ImageField(upload_to=get_products_path)
+    company_id=models.IntegerField(default=0)
     description=models.TextField(default=None)
     order=models.IntegerField(default=0)
     status=models.IntegerField(default=0)
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.product_name
+
+    @classmethod
+    def productcompany(self, company_id):
+        company_name = "-"
+        if Company.objects.filter(id = company_id).count():
+            company = Company.objects.get(id = company_id)
+            company_name = company.company_name
+        return company_name
+
 class CompanyProduct(models.Model):
     id=models.AutoField(primary_key=True)
     company_id=models.IntegerField(default=0)
     product_id=models.IntegerField(default=0)
+    detected_count=models.IntegerField(default=0)
+    store_id=models.IntegerField(default=0)
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)
 
 class Planogram(models.Model):
     id=models.AutoField(primary_key=True)
-    planogram_id=models.IntegerField(default=0)
+    planogram_id=models.CharField(max_length=255, default=None)
     planogram_name=models.CharField(max_length=255, default=None)
     planogram_photo=models.ImageField(upload_to='planograms')
     description=models.TextField(default=None)

@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'nazox.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'drink',
+        'NAME': 'bottle',
         'USER': 'root',
         'PASSWORD': 'Health777#',
         'HOST': 'localhost',
@@ -164,5 +164,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 SESSION_EXPIRE_SECONDS = 900  # 3 minute
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 1 # group by minute 
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 10 # group by minute 
 SESSION_TIMEOUT_REDIRECT = 'auth-lock-screen'

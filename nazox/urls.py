@@ -36,11 +36,21 @@ urlpatterns = [
 
     path('planograms',views.PlanogramsView.as_view(),name='planograms'),# Planograms
     path('planogram/new',views.PlanogramAddView.as_view(),name='planogram-new'),# New Planogram
+    path('plangram-delete',views.PlanogramDeleteView.as_view(),name='planogram-delete'),# DELETE Product
+    path('planogram/<id>/edit',views.PlanogramEditView.as_view(),name='planogram-edit'),# Edit Planogram
 
     path('imagelist',views.ImageListView.as_view(),name='imagelist'),# New Planogram
     path('processlist',views.ProcessListView.as_view(),name='processlist'),# New Planogram
 
     path('addimage',views.AddImageView.as_view(),name='addimage'),# New Planogram
+
+    path('delete-alldata',views.DeleteAlldata.as_view(),name='deletealldata'),# New Planogram
+
+    # APIS
+    path('api/products',views.APIProductsView.as_view(),name='api-products'),# Products
+    path('api/planograms',views.APIPlanogramsView.as_view(),name='api-plangorams'),# Products
+    path('api/company/<id>/products', views.APICompanyView.as_view(), name='api-companyproducts'),
+    path('api/products/detect', views.APIProcessingView.as_view(), name='api-productsdetect'),
 
     # Apps 
     path('ecommerce/',include('ecommerce.urls')),# Ecommerce
