@@ -8,7 +8,8 @@ class StarterPageView(View):
         greeting = {}
         greeting['title'] = "Starter Page"
         greeting['pageview'] = "Utility"
-        return render(request,'pages/utility/pages-starter.html',greeting)
+        return render(request,'pages/utility/pages-starter.html',greeting) # starter page view
+
 
 # Maintenance
 class MaintenanceView(View):
