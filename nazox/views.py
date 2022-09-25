@@ -829,7 +829,7 @@ class ProductExportView(LoginRequiredMixin,View):
         file_path = os.path.join(settings.MEDIA_ROOT + 'dataset/', 'vodka.names')
         if os.path.isfile(file_path):
             os.remove(file_path)
-        verified_products = Product.objects.filter(status = 1)
+        verified_products = Product.objects.order_by('order').filter(status = 1)
         f = open(file_path, 'a', encoding='utf8')
         names_file = File(f)
         for pro in verified_products:
